@@ -20,10 +20,11 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
+app.use('/', confidential.js);
 app.use('/users', usersRouter);
 
 //Database Connection Setup
-const uri = "mongodb+srv://admin:rgkSdAfpeA8lChhv@clustermdn.rcuj3.gcp.mongodb.net/local_library?retryWrites=true&w=majority";
+
 const client = new MongoClient(uri, { useNewUrlParser: true,
                                       useUnifiedTopology: true});
 client.connect(err => {
