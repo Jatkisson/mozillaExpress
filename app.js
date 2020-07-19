@@ -22,12 +22,21 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 
+//Database Connection Setup
+const uri = "mongodb+srv://admin:rgkSdAfpeA8lChhv@clustermdn.rcuj3.gcp.mongodb.net/local_library?retryWrites=true&w=majority";
+const client = new MongoClient(uri, { useNewUrlParser: true,
+                                      useUnifiedTopology: true});
+client.connect(err => {
+  const collection = client.db("test").collection("devices");
+  // perform actions on the collection object
+  client.close();
+});
+
 // catch 404 and forward to error handler
-/*
 app.use(function(req, res, next) {
   next(createError(404));
 });
-*/
+
 
 // error handler
 app.use(function(err, req, res, next) {
