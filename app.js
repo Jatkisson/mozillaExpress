@@ -7,12 +7,9 @@ var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var catalogRouter = require('./routes/catalog');  //Import routes for "catalog" area of site
 const key = require('./private/confidential');
+var mongoose = require('mongoose');
 
 var app = express();
-
-// view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'pug');
 
 app.use(logger('dev'));
 app.use(express.json());
@@ -25,15 +22,16 @@ app.use('/users', usersRouter);
 app.use('/catalog', catalogRouter);  // Add catalog routes to middleware chain.
 
 
-//Database Connection Setup
-const MongoClient = require('mongodb').MongoClient;
-const client = new MongoClient(key.uri, { useNewUrlParser: true,
-                                      useUnifiedTopology: true});
-client.connect(err => {
-  const collection = client.db("local_library").collection("Collection0");
-  // perform actions on the collection object
-  client.close();
-});
+// Set up mongoose connection
+mongoose.connect(key.uri, { useNewUrlParser: true,
+                            useUnifiedTopology: true });
+mongoose.Promise = global.Promise;
+var db = mongoose.connection;
+db.on('error', console.error.bind(console, 'MongoDB connection error:'));
+
+// View engine setup.
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'pug');
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
