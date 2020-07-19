@@ -3,9 +3,10 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
+var catalogRouter = require('./routes/catalog');  //Import routes for "catalog" area of site
+const key = require('./private/confidential');
 
 var app = express();
 
@@ -20,15 +21,16 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
-app.use('/', confidential.js);
 app.use('/users', usersRouter);
+app.use('/catalog', catalogRouter);  // Add catalog routes to middleware chain.
+
 
 //Database Connection Setup
-
-const client = new MongoClient(uri, { useNewUrlParser: true,
+const MongoClient = require('mongodb').MongoClient;
+const client = new MongoClient(key.uri, { useNewUrlParser: true,
                                       useUnifiedTopology: true});
 client.connect(err => {
-  const collection = client.db("test").collection("devices");
+  const collection = client.db("local_library").collection("Collection0");
   // perform actions on the collection object
   client.close();
 });

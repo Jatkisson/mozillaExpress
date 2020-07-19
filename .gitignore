@@ -1,2 +1,5 @@
 node_modules
-confidential.js
+.env
+private
+populatedb.js
+.gitignore
